@@ -158,7 +158,6 @@ local function set_spectator(player)
       for identifier,thing in pairs(hb.hudtables) do
         local id = hb.hudtables[identifier].hudids[name]
         if id then
-          --print(core.serialize(id))
           player:hud_remove(id.bar)
           hb.hudtables[identifier].hudids[name].bar = nil
         end
@@ -190,7 +189,6 @@ core.register_globalstep(function(dtime)
   
   
   for _,player in pairs(core.get_connected_players()) do 
-    print(vector.length(player:get_velocity()))
     local hudd = simple_border.hud[player]
     if hudd and hudd.join_cooldown then
       if hudd.join_cooldown < 0 then
