@@ -169,14 +169,7 @@ local function set_spectator(player)
     })
   end
   player:hud_set_hotbar_itemcount(1)
-  
-  player:hud_set_flags({
-    hotbar = false,
-    healthbar = false,
-    crosshair = false,
-    wielditem = false,
-    breathbar = false,
-  })
+
 end
 
 local players_out_of_bounds = {}
