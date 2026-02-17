@@ -142,10 +142,6 @@ local function set_spectator(player)
   set_screen_message(player, {text = "You are a spectator", number = 0xffffff, position={x = 0.5, y = 0.1}}, {text=""})
   set_spectator_constant(player)
   player:set_inventory_formspec("")
-  core.hud_replace_builtin("name", {})
-  core.hud_replace_builtin("breath", {})
-  core.hud_replace_builtin("health", {})
-  core.hud_replace_builtin("hotbar", {})
   player:get_armor_groups({fleshy=0})
   if core.get_modpath("mcl_gamemode") then
     playerphysics.add_physics_factor(player, "acceleration_default", "simple_border:acc_def", 0.3)
@@ -175,11 +171,11 @@ local function set_spectator(player)
   player:hud_set_hotbar_itemcount(1)
   
   player:hud_set_flags({
-    hotbar = true,
-    healthbar = true,
-    crosshair = true,
-    wielditem = true,
-    breathbar = true,
+    hotbar = false,
+    healthbar = false,
+    crosshair = false,
+    wielditem = false,
+    breathbar = false,
   })
 end
 
