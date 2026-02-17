@@ -5,9 +5,9 @@ simple_border = {
 }
 
 -- how long the border lasts till final size
-local GAMESECONDS = 1000
-local START_SIZE = 500 -- radius
-local FINAL_SIZE = 1 -- radius
+local GAMESECONDS = 1800
+local START_SIZE = 1000 -- radius
+local FINAL_SIZE = 5 -- radius
 
 START_SIZE = START_SIZE-FINAL_SIZE
 
@@ -154,6 +154,7 @@ local function set_spectator(player)
     playerphysics.add_physics_factor(player, "jump", "simple_border:jump", 0)
     player:get_meta():set_string("gamemode", "creative") -- very hacky
     local name = player:get_player_name()
+    --[[
     if hb.hudtables then
       for identifier,thing in pairs(hb.hudtables) do
         local id = hb.hudtables[identifier].hudids[name]
@@ -162,7 +163,7 @@ local function set_spectator(player)
           hb.hudtables[identifier].hudids[name].bar = nil
         end
       end
-    end
+    end]]
   else
     player:set_physics_override({
       acceleration_default = 0.3,
@@ -174,11 +175,11 @@ local function set_spectator(player)
   player:hud_set_hotbar_itemcount(1)
   
   player:hud_set_flags({
-    hotbar = false,
-    healthbar = false,
-    crosshair = false,
-    wielditem = false,
-    breathbar = false,
+    hotbar = true,
+    healthbar = true,
+    crosshair = true,
+    wielditem = true,
+    breathbar = true,
   })
 end
 
