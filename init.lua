@@ -6,10 +6,17 @@ simple_border = {
 
 -- how long the border lasts till final size
 local GAMESECONDS = 1985
+local COMBATSTART = GAMESECONDS/2
 local START_SIZE = 2000 -- radius
 local FINAL_SIZE = 15 -- radius
 
 START_SIZE = START_SIZE-FINAL_SIZE
+
+local function combat_started()
+  if COMBATSTART < core.get_gametime() then
+    return true
+  end
+end
 
 local function get_border_radius(seconds)
   local gtime = core.get_gametime()
@@ -282,7 +289,7 @@ core.register_globalstep(function(dtime)
     
     simple_border.set_hud(player)
 
-    local spectator = core.get_player_privs(player:get_player_name()).spectator
+    local spectator = core.get_player_privs(player:get_player_name()).spectator and not core.get_player_privs(player:get_player_name()).weather_manager
 
     if in_border(pos) and not spectator then
       player:add_velocity(vector.multiply(vector.direction(pos, vector.new(0,pos.y+10,0)), 5))
@@ -306,7 +313,7 @@ function core.get_connected_players(spectators)
   local new_list = {}
   local original_return = original_func()
   for _,player in pairs(original_return) do
-    local spec = core.get_player_privs(player:get_player_name()).spectator
+    local spec = core.get_player_privs(player:get_player_name()).spectator and not core.get_player_privs(player:get_player_name()).weather_manager
     if spectators and spec then
       table.insert(new_list, player)
     elseif not spectators and not spec then
@@ -316,15 +323,21 @@ function core.get_connected_players(spectators)
   return new_list
 end
 
+
 core.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
-  if core.get_player_privs(player:get_player_name()).spectator then
+  if core.get_player_privs(player:get_player_name()).spectator and not core.get_player_privs(player:get_player_name()).weather_manager then
+    return true
+  end
+
+  
+  if hitter and hitter:is_player() and not combat_started() then
     return true
   end
 end)
 
 
 core.register_on_joinplayer(function(player)
-  if core.get_player_privs(player:get_player_name()).spectator then
+  if core.get_player_privs(player:get_player_name()).spectator and not core.get_player_privs(player:get_player_name()).weather_manager then
     set_spectator(player)
   else
     set_screen_message(player)
@@ -338,8 +351,10 @@ end)
 local place_of_death = {}
 
 core.register_on_dieplayer(function(player, reason)
-  place_of_death[player] = player:get_pos()
-  set_spectator(player)
+  if reason.object and reason.object:is_player() then
+    place_of_death[player] = player:get_pos()
+    set_spectator(player)
+  end
 end)
 
 core.register_on_respawnplayer(function(player)
@@ -350,3 +365,4 @@ core.register_on_respawnplayer(function(player)
     end
   end)
 end)
+
