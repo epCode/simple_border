@@ -1,0 +1,2 @@
+# Disable spectator mode
+simple_border_spectator_mode_disable (Disable spectator mode) bool false

@@ -5,9 +5,9 @@ simple_border = {
 }
 
 -- how long the border lasts till final size
-local GAMESECONDS = 1800
-local START_SIZE = 1000 -- radius
-local FINAL_SIZE = 5 -- radius
+local GAMESECONDS = 1985
+local START_SIZE = 2000 -- radius
+local FINAL_SIZE = 15 -- radius
 
 START_SIZE = START_SIZE-FINAL_SIZE
 
@@ -115,6 +115,7 @@ end
 -- over and over again to override game stuffs.
 -- run every 0.5s
 local function set_spectator_constant(player)
+  if minetest.settings:get_bool("simple_border_spectator_mode_disable", false) then return end
   core.set_player_privs(player:get_player_name(), {fly=true,fast=true,noclip=true,spectator=true})
   if core.get_modpath("playertags") then -- removes player nametag if made by playertags
     local children = player:get_children()
@@ -139,6 +140,8 @@ end
 
 -- things needed to make the player invisible (compatible with mcl, mcla and minetest_game)
 local function set_spectator(player)
+  if minetest.settings:get_bool("simple_border_spectator_mode_disable", false) then return end
+
   set_screen_message(player, {text = "You are a spectator", number = 0xffffff, position={x = 0.5, y = 0.1}}, {text=""})
   set_spectator_constant(player)
   player:set_inventory_formspec("")
