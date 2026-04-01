@@ -352,6 +352,8 @@ end)
 local place_of_death = {}
 
 core.register_on_dieplayer(function(player, reason)
+  if disable_spec then return end
+
   if reason.object and reason.object:is_player() then
     place_of_death[player] = player:get_pos()
     set_spectator(player)
