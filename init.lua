@@ -3,6 +3,7 @@ local yes = true -- lol
 simple_border = {
   hud = {}
 }
+local disable_spec = minetest.settings:get_bool("simple_border_spectator_mode_disable", false)
 
 -- how long the border lasts till final size
 local GAMESECONDS = 1985
@@ -122,7 +123,7 @@ end
 -- over and over again to override game stuffs.
 -- run every 0.5s
 local function set_spectator_constant(player)
-  if minetest.settings:get_bool("simple_border_spectator_mode_disable", false) then return end
+  if disable_spec then return end
   core.set_player_privs(player:get_player_name(), {fly=true,fast=true,noclip=true,spectator=true})
   if core.get_modpath("playertags") then -- removes player nametag if made by playertags
     local children = player:get_children()
@@ -358,6 +359,7 @@ core.register_on_dieplayer(function(player, reason)
 end)
 
 core.register_on_respawnplayer(function(player)
+  if disable_spec then return end
   core.after(0.1, function()
     if player and place_of_death[player] and player:is_valid() then
       set_spectator(player)
